@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: standard:standard:0.1">
+    <CLASSES>
+      <root url="jar://F:/apache/apache-maven-3.5.2/repository/standard/standard/0.1/standard-0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://F:/apache/apache-maven-3.5.2/repository/standard/standard/0.1/standard-0.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://F:/apache/apache-maven-3.5.2/repository/standard/standard/0.1/standard-0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
