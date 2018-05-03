@@ -238,12 +238,12 @@ public class UserManagerController {
         }
     }
 
-    @ApiOperation(value = "修改用户邮箱", notes = "0失败，1成功")
-    @RequestMapping(value = "updateUserEmail.do", method = RequestMethod.POST)
+    @ApiOperation(value = "修改用户学校", notes = "0失败，1成功")
+    @RequestMapping(value = "updateUserSchool.do", method = RequestMethod.POST)
     @ResponseBody
-    public Message<String> updateUserEmail(HttpServletRequest request, @ApiParam("邮箱")@RequestParam String email) {
+    public Message<String> updateUserSchool(HttpServletRequest request, @ApiParam("学校")@RequestParam Integer school) {
         User user = Common.getCurrentUser(request);
-        user.setEmail(email);
+        user.setSchool(school);
         Boolean rs = userManager.saveUser(user);
         if (rs) {
             Common.updateSessionUser(request, user);

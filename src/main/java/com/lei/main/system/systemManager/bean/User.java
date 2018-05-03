@@ -25,8 +25,8 @@ public class User {
     private Integer status;
     @ApiModelProperty(value = "联系电话")
     private String telephone;
-    @ApiModelProperty("电子邮箱")
-    private String email;
+    @ApiModelProperty("学校")
+    private Integer school;
     @ApiModelProperty("备注")
     private String remark;
     private Integer isDelete;//是否删除 0-未删 ， 1-删除
@@ -105,13 +105,13 @@ public class User {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
-    @Column(name="email")
-    public String getEmail() {
-        return email;
+    @Column(name="school")
+    public Integer getSchool() {
+        return school;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSchool(Integer school) {
+        this.school = school;
     }
     @Column(name="remark")
     public String getRemark() {
