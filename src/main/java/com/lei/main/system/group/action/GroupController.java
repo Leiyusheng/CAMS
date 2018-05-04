@@ -1,6 +1,7 @@
 package com.lei.main.system.group.action;
 
 import com.lei.main.comm.bean.Message;
+import com.lei.main.comm.service.FileService;
 import com.lei.main.comm.util.Common;
 import com.lei.main.system.course.bean.Course;
 import com.lei.main.system.course.service.CourseService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,6 +34,8 @@ public class GroupController {
     private GroupService groupService;
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private FileService fileService;
 
     @ApiOperation(value = "新建或修改群组", notes ="填编号为修改，不填为新建；0失败，1成功，2群组不存在，3不在群中")
     @RequestMapping(value = "saveGroupInfo.do", method = RequestMethod.POST)
@@ -73,6 +77,38 @@ public class GroupController {
         } else {
             return Common.messageBox(Common.failed);
         }
+    }
+
+    @ApiOperation(value = "修改群组头像", notes = "0失败，1成功，2群组不存在，3不在群中")
+    @RequestMapping(value = "updateGroupLogo.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Message<String> updateGroupLogo(HttpServletRequest request,
+                                           @ApiParam("群编号")@RequestParam String gid,
+                                           @ApiParam("头像")@RequestParam MultipartFile file) {
+        User user = Common.getCurrentUser(request);
+        Group group = groupService.getGroupById(gid);
+        if (group == null) {
+            return Common.messageBox("2", "所选群组不存在");
+        }
+        GroupUser groupUser = groupService.getGroupUserById(gid, user.getUserId().toString());
+        if (groupUser == null) {
+            return Common.messageBox("3", "您不在该群组中，无法修改其信息");
+        }
+        Message<String> m;
+        try {
+            m = fileService.saveFile("group", file);//保存图片，获取图片相对路径
+        } catch (Exception e) {
+            m = Common.messageBox(Common.failed);
+            e.printStackTrace();
+        }
+        if (m.getCode().equals(Common.success)) {
+            group.setGroupLogo(m.getMessage());
+            Boolean rs = groupService.saveGroupInfo(group);
+            if (rs) {
+                return m;
+            }
+        }
+        return Common.messageBox(Common.failed);
     }
 
     @ApiOperation(value = "获取用户群组列表", notes ="0失败，1成功")

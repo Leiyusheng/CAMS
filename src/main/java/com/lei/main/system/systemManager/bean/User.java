@@ -36,6 +36,8 @@ public class User {
     private Integer leaveTimes;
     @ApiModelProperty("旷课次数")
     private Integer cutTimes;
+    @ApiModelProperty("头像")
+    private String headLogo;
 
     public User() {}
 
@@ -152,5 +154,13 @@ public class User {
 
     public void setCutTimes(Integer cutTimes) {
         this.cutTimes = cutTimes;
+    }
+    @Column(name="head_logo")
+    public String getHeadLogo() {
+        return headLogo;
+    }
+
+    public void setHeadLogo(String headLogo) {
+        this.headLogo = headLogo;
     }
 }

@@ -2,6 +2,7 @@ package com.lei.main.system.systemManager.action;
 
 import com.lei.main.comm.bean.Message;
 import com.lei.main.comm.dao.redis.RedisUtil;
+import com.lei.main.comm.service.FileService;
 import com.lei.main.comm.util.Common;
 import com.lei.main.system.attendance.bean.Member;
 import com.lei.main.system.attendance.bean.Position;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -29,6 +31,8 @@ public class UserManagerController {
     private UserManager userManager;
     @Autowired
     private FriendService friendService;
+    @Autowired
+    private FileService fileService;
 
     @ApiOperation(value = "获取好友列表", notes = "0失败，1成功")
     @RequestMapping(value = "getFriendList.do", method = RequestMethod.POST)
@@ -266,5 +270,28 @@ public class UserManagerController {
         } else {
             return Common.messageBox(Common.failed);
         }
+    }
+
+    @ApiOperation(value = "修改用户头像", notes = "0失败，1成功")
+    @RequestMapping(value = "updateUserHeadLogo.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Message<String> updateUserHeadLogo(HttpServletRequest request,@ApiParam("头像")@RequestParam MultipartFile file) {
+        User user = Common.getCurrentUser(request);
+        Message<String> m;
+        try {
+            m = fileService.saveFile("head", file);//保存图片，获取图片相对路径
+        } catch (Exception e) {
+            m = Common.messageBox(Common.failed);
+            e.printStackTrace();
+        }
+        if (m.getCode().equals(Common.success)) {
+            user.setHeadLogo(m.getMessage());
+            Boolean rs = userManager.saveUser(user);
+            if (rs) {
+                Common.updateSessionUser(request, user);
+                return m;
+            }
+        }
+        return Common.messageBox(Common.failed);
     }
 }

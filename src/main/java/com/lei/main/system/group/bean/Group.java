@@ -18,6 +18,8 @@ public class Group {
     private Integer num;
     @ApiModelProperty("修改人")
     private Integer modifier;
+    @ApiModelProperty("群头像")
+    private String groupLogo;
 
     public Group() {}
 
@@ -74,5 +76,13 @@ public class Group {
 
     public void setModifier(Integer modifier) {
         this.modifier = modifier;
+    }
+    @Column(name="group_logo")
+    public String getGroupLogo() {
+        return groupLogo;
+    }
+
+    public void setGroupLogo(String groupLogo) {
+        this.groupLogo = groupLogo;
     }
 }
